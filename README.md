@@ -17,7 +17,7 @@ git clone https://github.com/himani07/ManageCloud.git
 go to project directory
 ```
 cd ManageCloud
-``
+```
 
 
 ### Installing
