@@ -27,20 +27,20 @@ class Cluster(db.Model):
 
     @staticmethod
     def get_all_clusters():
-        return db.session.query(Cluster.cluster_name, Cluster.cloud_region)\
+        return db.session.query(Cluster.id, Cluster.cluster_name, Cluster.cloud_region, Cluster.is_deleted)\
             .filter(Cluster.is_deleted == 'N').all()
 
     @staticmethod
     def find_by_id(id_):
-        return db.session.query.filter(and_(Cluster.id == id_, Cluster.is_deleted == 'N')).first()
+        return db.session.query(Cluster).filter(and_(Cluster.id == id_, Cluster.is_deleted == 'N')).first()
 
     @staticmethod
     def delete(cluster_id):
         cluster = Cluster.find_by_id(cluster_id)
         if cluster:
             cluster.is_deleted = 'Y'
-
             db.session.flush()
+        return
 
     @staticmethod
     def commit():

@@ -5,7 +5,8 @@ from utils.flask_models import FlaskModels
 from utils.utils import Utils
 from utils.response import Response
 from utils.exception import AppException
-from flask_restplus import Resource, reqparse
+from utils.constants import exception_message
+
 
 logger = Utils.get_logger(__name__)
 
@@ -22,30 +23,29 @@ class ClusterController(Resource):
         except AppException:
             raise
         except Exception:
-            raise AppException('Error in fetching cluster details')
+            raise AppException(exception_message.get('FETCH_CLUSTER_EXCEPTION'))
         return Response(True, clusters).__dict__, 200
 
     @api.expect(FlaskModels.cluster_model, validate=True)
     def post(self):
-        """
-                """
         try:
             input_data = api.payload
             ClusterService.create_cluster(input_data)
         except AppException:
             raise
         except Exception:
-            raise AppException('Error in creating cluster')
-        return "OK"
+            raise AppException(exception_message.get('CREATE_CLUSTER_EXCEPTION'))
+        return "Cluster created successfully."
 
     @api.expect(FlaskModels.delete_cluster, validate=True)
     def delete(self):
-        input_data = api.payload
-        ClusterService.delete_cluster(input_data)
-
-        return Response(True, "Done").__dict__, 200
-
-        return "OK"
-
+        try:
+            input_data = api.payload
+            ClusterService.delete_cluster(input_data)
+        except AppException:
+            raise
+        except Exception:
+            raise AppException(exception_message.get('DELETE_CLUSTER_EXCEPTION'))
+        return Response(True, "Cluster deleted successfully").__dict__, 200
 
 

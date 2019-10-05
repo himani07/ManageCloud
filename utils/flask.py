@@ -14,6 +14,7 @@ Defining the Flask app
 """
 
 app = Flask(__name__)
+application = app
 
 app.wsgi_app = ProxyFix(app.wsgi_app)
 

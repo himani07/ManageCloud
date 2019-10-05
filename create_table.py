@@ -18,8 +18,10 @@ machine = Table(
     'machine', meta,
     Column('MachineId', Integer, primary_key=True),
     Column('MachineName', String),
+    Column('ClusterId', String),
     Column('IPAddress', String),
     Column('InstanceType', String),
+    Column('MachineStatus', String),
     Column('IsDeleted', String),
     Column('CreatedBy', String),
     Column('CreatedTimestamp', String)
@@ -28,11 +30,12 @@ machine = Table(
 tag = Table(
     'tag', meta,
     Column('TagId', Integer, primary_key=True),
-    Column('TagName', String),
+    Column('TagKey', String),
+    Column('TagValue', String),
     Column('MachineId', String),
     Column('IsDeleted', String),
     Column('CreatedBy', String),
     Column('CreatedTimestamp', String)
 )
-meta.drop_all(engine)
+#meta.drop_all(engine)
 meta.create_all(engine)
