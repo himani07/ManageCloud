@@ -62,7 +62,7 @@ You can either view a simple coverage report in the terminal using this command:
 ```
 coverage report
 ```
-###or
+### or
 You can generate a HTML report which allows you to see which lines were covered in each file using this command:
 ```
 coverage html
