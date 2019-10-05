@@ -36,7 +36,7 @@ class TagService:
     def delete_tag(input_data):
         try:
             tag_id = input_data['tag_id']
-            Tag.delete(tag_id)
+            Tag.delete([tag_id])
         except:
             raise AppException(exception_message.get('DELETE_TAG_EXCEPTION'))
         Tag.commit()

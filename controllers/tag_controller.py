@@ -4,8 +4,8 @@ from services.tag_service import TagService
 from utils.flask_models import FlaskModels
 from utils.exception import AppException
 from utils.response import Response
-from utils.constants import exception_message
-
+from utils.constants import exception_message, TAG_CREATE_SUCCESS, TAG_DELETE_SUCCESS
+import logging
 
 ns = api.namespace('api/tag',
                    description='Operations related to Machine tags')
@@ -39,8 +39,8 @@ class TagController(Resource):
         except AppException:
             raise
         except Exception:
-            raise AppException('Error in creating tag')
-        return "OK"
+            raise AppException(exception_message.get('CREATE_TAG_EXCEPTION'))
+        return TAG_CREATE_SUCCESS
 
     @api.expect(FlaskModels.delete_tag, validate=True)
     def delete(self):
@@ -49,7 +49,7 @@ class TagController(Resource):
             input_data = api.payload
             TagService.delete_tag(input_data)
         except AppException:
-            raise
+            logging.exception('hiiihi')
         except Exception:
-            raise AppException('Error in deleting tag')
-        return "OK"
+            raise AppException(exception_message.get('DELETE_TAG_EXCEPTION'))
+        return TAG_DELETE_SUCCESS

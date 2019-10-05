@@ -1,8 +1,9 @@
-from models.cluster import Cluster
 from datetime import datetime
 from utils.exception import AppException
-from models.machine import Machine
 from utils.constants import exception_message
+from models.cluster import Cluster
+from models.machine import Machine
+from models.tag import Tag
 
 
 class ClusterService:
@@ -51,10 +52,16 @@ class ClusterService:
         except:
             raise AppException(exception_message.get('DELETE_CLUSTER_EXCEPTION'))
         try:
-            machines = Machine.find_machine_id(input_data['cluster_id'])
-            for machine in machines:
-                Machine.delete(machine[0])
+            machines = Machine.find_machine_by_cluster_id(input_data['cluster_id'])
+            machine_ids = [machine[0] for machine in machines]
+            Machine.delete(machine_ids)
         except:
             AppException(exception_message.get('DELETE_MACHINE_EXCEPTION'))
+        try:
+            tags = Tag.find_tag_by_machine_id(machine_ids)
+            tag_ids = [tag.id for tag in tags]
+            Tag.delete(tag_ids)
+        except:
+            AppException(exception_message.get('DELETE_TAG_EXCEPTION'))
         Cluster.commit()
         return

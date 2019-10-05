@@ -33,21 +33,26 @@ class Machine(db.Model):
         return self
 
     @staticmethod
-    def find_by_id(id_):
-        return db.session.query(Machine).filter(and_(Machine.id == id_, Machine.is_deleted == 'N')).first()
-
+    def check_if_exists_with_same_name(machine_name):
+        return Machine.query.filter(and_(Machine.machine_name == machine_name, Machine.is_deleted == 'N')).first()
 
     @staticmethod
-    def find_machine_id(id_):
+    def find_machine_by_id(machine_ids):
+        return db.session.query(Machine).filter(
+            Machine.id.in_(machine_ids), Machine.is_deleted == 'N').all()
+
+    @staticmethod
+    def find_machine_by_cluster_id(cluster_id):
         return db.session.query(Machine.id).filter(
-                        and_(Machine.cluster_id == id_, Machine.is_deleted == 'N')).all()
+                        and_(Machine.cluster_id == cluster_id, Machine.is_deleted == 'N')).all()
 
     @staticmethod
-    def delete(machine_id):
-        machine = Machine.find_by_id(machine_id)
-        if machine:
-            machine.is_deleted = 'Y'
-            db.session.flush()
+    def delete(machine_ids):
+        machines = Machine.find_machine_by_id(machine_ids)
+        if machines:
+            for machine in machines:
+                machine.is_deleted = 'Y'
+                db.session.flush()
         return
 
     @staticmethod

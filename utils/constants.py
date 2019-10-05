@@ -28,7 +28,8 @@ exception_message = {
     'START_EXCEPTION': 'Error in starting machine',
     'STOP_EXCEPTION': 'Error in stopping machine',
     'REBOOT_EXCEPTION': 'Error in rebooting machine',
-    'COMMAND_EXCEPTION': 'Error in performing start/stop/reboot machine'
+    'COMMAND_EXCEPTION': 'Error in performing start/stop/reboot machine',
+    'EXISTING_MACHINE_EXCEPTION': 'Machine with this name already exists',
 
 }
 CLUSTER_CREATE_SUCCESS = 'Cluster created successfully'

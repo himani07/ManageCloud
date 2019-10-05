@@ -32,17 +32,21 @@ class MachineService:
         :return:
         """
         try:
+            exists = Machine.check_if_exists_with_same_name(input_data['machine_name'])
+            if exists:
+                raise AppException(exception_message.get('EXISTING_MACHINE_EXCEPTION'))
+
             machine = Machine(input_data['machine_name'], input_data['cluster_id'],
                               input_data['ip_address'],  input_data['instance_type'],INITIAL_MACHINE_STATE,
                               is_deleted='N', created_by='himani.jain', created_timestamp=datetime.now()).save()
             machine_id = machine.id
         except:
-            AppException(exception_message.get('CREATE_MACHINE_EXCEPTION'))
+            raise AppException(exception_message.get('CREATE_MACHINE_EXCEPTION'))
         try:
             Tag(input_data['tag_key'], input_data['tag_value'], machine_id, is_deleted='N',
                 created_by='himani.jain', created_timestamp=datetime.now()).save()
         except:
-            AppException(exception_message.get('CREATE_TAG_EXCEPTION'))
+            raise AppException(exception_message.get('CREATE_TAG_EXCEPTION'))
         Machine.commit()
         return
 
@@ -55,13 +59,15 @@ class MachineService:
         """
         machine_id = input_data['machine_id']
         try:
-            Machine.delete(machine_id)
+            Machine.delete([machine_id])
         except:
-            AppException(exception_message.get('DELETE_MACHINE_EXCEPTION'))
+            raise AppException(exception_message.get('DELETE_MACHINE_EXCEPTION'))
         try:
-            Tag.delete(machine_id)
+            tags = Tag.find_tag_by_machine_id([machine_id])
+            tag_ids = [tag.id for tag in tags]
+            Tag.delete(tag_ids)
         except:
-            AppException(exception_message.get('DELETE_TAG_EXCEPTION'))
+            raise AppException(exception_message.get('DELETE_TAG_EXCEPTION'))
         Machine.commit()
         return
 

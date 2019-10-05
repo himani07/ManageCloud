@@ -1,5 +1,4 @@
 from utils.utils import Utils
-from sqlalchemy import and_
 from models.machine import Machine
 from models.cluster import Cluster
 
@@ -33,15 +32,13 @@ class Tag(db.Model):
     @staticmethod
     def get_all_tags():
         return db.session.query(Tag.id, Tag.tag_key, Tag.tag_value, Tag.machine_id).filter(
-            Tag.is_deleted == 'N'
-        ).all()
+            Tag.is_deleted == 'N').all()
 
     @staticmethod
     def find_machine_by_tag(tag_name):
         return db.session.query(Machine).join(Tag).filter(
             Machine.id == Tag.machine_id,
-            Tag.tag_key == tag_name
-        ).all()
+            Tag.tag_key == tag_name).all()
 
     @staticmethod
     def start_machine(tag_name):
@@ -64,28 +61,26 @@ class Tag(db.Model):
     @staticmethod
     def get_machine_details():
         return db.session.query(Machine.id, Machine.machine_name, Tag.tag_key, Machine.ip_address,
-                                Machine.instance_type, Cluster.cluster_name, Machine.machine_status).join(Cluster) \
-            .join(Tag).filter(Machine.cluster_id == Cluster.id,
-                              Machine.id == Tag.machine_id,
-                              Machine.is_deleted == 'N').all()
-
-    @classmethod
-    def find_by_id(cls, id_):
-        return cls.query.filter(and_(Tag.id == id_, Tag.is_deleted == 'N')).first()
-
-    @classmethod
-    def find_by_machine_id(cls, id_):
-        return cls.query.filter(and_(Tag.machine_id == id_, Tag.is_deleted == 'N')).first()
+                                Machine.instance_type, Cluster.cluster_name, Machine.machine_status).\
+            join(Cluster) .join(Tag).filter(Machine.cluster_id == Cluster.id,
+                                            Machine.id == Tag.machine_id,
+                                            Machine.is_deleted == 'N').all()
 
     @staticmethod
-    def delete(machine_id, tag_id=None):
-        if tag_id:
-            tag = Tag.find_by_id(tag_id)
-            tag.is_deleted = 'Y'
-            db.session.flush()
-        else:
-            tag = Tag.find_by_machine_id(machine_id)
-            if tag:
+    def find_tag_by_tag_id(tag_ids):
+        return db.session.query(Tag).filter(
+            Tag.id.in_(tag_ids), Tag.is_deleted == 'N').all()
+
+    @staticmethod
+    def find_tag_by_machine_id(machine_ids):
+        return db.session.query(Tag).filter(
+            Tag.machine_id.in_(machine_ids), Tag.is_deleted == 'N').all()
+
+    @staticmethod
+    def delete(tag_ids):
+        tags = Tag.find_tag_by_tag_id(tag_ids)
+        if tags:
+            for tag in tags:
                 tag.is_deleted = 'Y'
                 db.session.flush()
         return
