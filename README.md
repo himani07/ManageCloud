@@ -41,29 +41,17 @@ create tables using this command:
 ```
 python create_table.py
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
+## Running the app
+You can run your app using below command:
+```
+python app.py
+```
 
 ## Running the tests
 
 To run the tests, use this command
 ```
 pytest
-```
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
 ```
 ## Code Coverage
 To measure the code coverage of your tests, use the coverage command to run pytest instead of running it directly.
