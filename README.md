@@ -4,7 +4,7 @@
 run create_table.py for creation of tables
 # Manage Cloud Machines
 
-The project allows users to create clusters, create machines in a cluster, add tags to the machine when creating them, 
+The project allows users to create clusters, create machines in a cluster, add tags to the machine when creating them,
 delete machines and clusters and perform operations like start, stop, reboot on a group of machines using tags.
 
 ## Getting Started
