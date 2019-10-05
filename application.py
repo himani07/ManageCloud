@@ -38,7 +38,6 @@ if __name__ == '__main__':
 
     try:
         application.run(host='0.0.0.0', port=5050, debug=True)
-        #application.run()
     except Exception as e:
         AppException('Error in starting server')
 

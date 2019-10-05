@@ -72,7 +72,7 @@ class MachineService:
         :param input_data:
         :return:
         """
-        tag_name = input_data['tag_name']
+        tag_name = input_data['tag_key']
         command = input_data['command'].lower()
         if command == 'start':
             try:

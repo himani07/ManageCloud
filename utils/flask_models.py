@@ -26,13 +26,14 @@ class FlaskModels:
     })
 
     machine_commands = api.model('stop_machine', {
-        'tag_name': fields.String(required=True, description='This field defines the tag name'),
+        'tag_key': fields.String(required=True, description='This field defines the tag key'),
         'command': fields.String(required=True, description='This field defines the machine command')
     })
 
     tag_model = api.model('tag_model', {
         'machine_id': fields.Integer(required=True, description='This field defines the machine id'),
-        'tag_name': fields.String()
+        'tag_key': fields.String(required=True, description='This field defines the tag key'),
+        'tag_value': fields.String(required=True, description='This field defines the tag value'),
     })
 
     delete_tag = api.model('delete_tag', {

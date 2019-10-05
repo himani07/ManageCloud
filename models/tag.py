@@ -31,6 +31,12 @@ class Tag(db.Model):
         return self
 
     @staticmethod
+    def get_all_tags():
+        return db.session.query(Tag.id, Tag.tag_key, Tag.tag_value, Tag.machine_id).filter(
+            Tag.is_deleted == 'N'
+        ).all()
+
+    @staticmethod
     def find_machine_by_tag(tag_name):
         return db.session.query(Machine).join(Tag).filter(
             Machine.id == Tag.machine_id,
@@ -67,13 +73,22 @@ class Tag(db.Model):
     def find_by_id(cls, id_):
         return cls.query.filter(and_(Tag.id == id_, Tag.is_deleted == 'N')).first()
 
-    @staticmethod
-    def delete(machine_id):
-        tag = Tag.find_by_id(machine_id)
-        if tag:
-            tag.is_deleted = 'Y'
+    @classmethod
+    def find_by_machine_id(cls, id_):
+        return cls.query.filter(and_(Tag.machine_id == id_, Tag.is_deleted == 'N')).first()
 
+    @staticmethod
+    def delete(machine_id, tag_id=None):
+        if tag_id:
+            tag = Tag.find_by_id(tag_id)
+            tag.is_deleted = 'Y'
             db.session.flush()
+        else:
+            tag = Tag.find_by_machine_id(machine_id)
+            if tag:
+                tag.is_deleted = 'Y'
+                db.session.flush()
+        return
 
     @staticmethod
     def commit():
